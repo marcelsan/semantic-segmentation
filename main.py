@@ -95,7 +95,7 @@ def main():
     train_generator = data_gen(TRAIN_SET_IMAGES_DIR, TRAIN_SET_LABELS_DIR)
     validation_generator = data_gen(VALIDATION_SET_IMAGES_DIR, VALIDATION_SET_LABELS_DIR)
 
-    history = model.fit_generator(train_generator, steps_per_epoch=1000, epochs=20, callbacks=[tensorboard])
+    history = model.fit_generator(train_generator, steps_per_epoch=1000, epochs=20, validation_data=validation_generator, validation_steps=800, callbacks=[tensorboard])
 
     if SAVE_MODEL:
         # serialize model to JSON
