@@ -1,15 +1,16 @@
+from keras import initializers
 from keras import layers
 from keras import models
 from keras import optimizers
-from keras.callbacks import EarlyStopping, ReduceLROnPlateau
-from keras.applications.vgg16 import VGG16
-from keras import initializers
-from keras import optimizers
 
-import glob
-import os
+from keras.applications.vgg16 import VGG16
+from keras.callbacks import EarlyStopping, ReduceLROnPlateau
+
 import cv2
+import glob
+import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 SAVE_MODEL = False
 TRAIN_SET_IMAGES_DIR = 'datasets/HUMANS/train/jpge'
@@ -105,6 +106,22 @@ def main():
     history = model.fit_generator(train_generator, steps_per_epoch=1500, epochs=10,
                                   validation_data=validation_generator, validation_steps=800,
                                   callbacks=callbacks_list)
+
+    acc = history.history['acc']
+    val_acc = history.history['val_acc']
+    loss = history.history['loss']
+    val_loss = history.history['val_loss']
+    epochs = range(1, len(acc) + 1)
+    plt.plot(epochs, acc, 'bo', label='Training acc')
+    plt.plot(epochs, val_acc, 'b', label='Validation acc')
+    plt.title('Training and validation accuracy')
+    plt.legend()
+    plt.figure()
+    plt.plot(epochs, loss, 'bo', label='Training loss')
+    plt.plot(epochs, val_loss, 'b', label='Validation loss')
+    plt.title('Training and validation loss')
+    plt.legend()
+    plt.show()
 
     if SAVE_MODEL:
         # serialize model to JSON
