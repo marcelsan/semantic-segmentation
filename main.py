@@ -40,7 +40,7 @@ def create_model(input_w=480, input_h=480):
     x = layers.Conv2D(1, kernel_size=(1, 1), use_bias=False, activation='relu',
                     padding='same', kernel_initializer=initializers.glorot_uniform(42))(x)
     x = layers.Conv2DTranspose(1, kernel_size=(64, 64), strides=(
-        32, 32), use_bias=False, padding='same', kernel_initializer=initializers.glorot_uniform(42))(x)
+        32, 32), use_bias=False, activation='sigmoid', padding='same', kernel_initializer=initializers.glorot_uniform(42))(x)
 
     model = models.Model(input_, x)
 
@@ -87,24 +87,33 @@ def main():
 
     model.summary()
     model.compile(loss='binary_crossentropy',
-                  optimizer=optimizers.Adam(lr=1e-4), metrics=['acc'])
+                  optimizer=optimizers.Adam(lr=1e-4), metrics=['acc', 'val_acc'])
 
-    tensorboard = TensorBoard(log_dir='./logs', histogram_freq=0,
-                              write_graph=True, write_images=False)
+    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
+                                  patience=2, verbose=1, min_lr=1e-6)
+
+    early_stop = EarlyStopping(monitor='val_loss',
+                               min_delta=0,
+                               patience=10,
+                               verbose=0, mode='auto')
+
+    callbacks_list = [reduce_lr, early_stop]
 
     train_generator = data_gen(TRAIN_SET_IMAGES_DIR, TRAIN_SET_LABELS_DIR)
     validation_generator = data_gen(VALIDATION_SET_IMAGES_DIR, VALIDATION_SET_LABELS_DIR)
 
-    history = model.fit_generator(train_generator, steps_per_epoch=1000, epochs=20, validation_data=validation_generator, validation_steps=800, callbacks=[tensorboard])
+    history = model.fit_generator(train_generator, steps_per_epoch=1500, epochs=10,
+                                  validation_data=validation_generator, validation_steps=800,
+                                  callbacks=callbacks_list)
 
     if SAVE_MODEL:
         # serialize model to JSON
         model_json = model.to_json()
-        with open("model.json", "w") as json_file:
+        with open("weights/model.json", "w") as json_file:
             json_file.write(model_json)
 
         # serialize weights to HDF5
-        model.save_weights("model.h5")
+        model.save_weights("weights/model.h5")
         print("[INFO] Saved model to disk.")
 
 if __name__ == '__main__':
