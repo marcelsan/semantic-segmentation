@@ -1,7 +1,7 @@
 from keras import layers
 from keras import models
 from keras import optimizers
-from keras.callbacks import EarlyStopping, TensorBoard
+from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from keras.applications.vgg16 import VGG16
 from keras import initializers
 from keras import optimizers
