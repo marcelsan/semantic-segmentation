@@ -87,7 +87,7 @@ def main():
 
     model.summary()
     model.compile(loss='binary_crossentropy',
-                  optimizer=optimizers.Adam(lr=1e-4), metrics=['acc', 'val_acc'])
+                  optimizer=optimizers.Adam(lr=1e-4), metrics=['acc'])
 
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
                                   patience=2, verbose=1, min_lr=1e-6)
