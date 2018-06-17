@@ -103,8 +103,8 @@ def main():
     train_generator = data_gen(TRAIN_SET_IMAGES_DIR, TRAIN_SET_LABELS_DIR)
     validation_generator = data_gen(VALIDATION_SET_IMAGES_DIR, VALIDATION_SET_LABELS_DIR)
 
-    history = model.fit_generator(train_generator, steps_per_epoch=1500, epochs=50,
-                                  validation_data=validation_generator, validation_steps=800,
+    history = model.fit_generator(train_generator, steps_per_epoch=500, epochs=50,
+                                  validation_data=validation_generator, validation_steps=190,
                                   callbacks=callbacks_list)
 
     acc = history.history['acc']
