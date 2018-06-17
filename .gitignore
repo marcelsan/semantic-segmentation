@@ -101,6 +101,7 @@ venv.bak/
 /site
 /datasets
 /logs
+/weights
 
 # mypy
 .mypy_cache/

@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-SAVE_MODEL = False
+SAVE_MODEL = True
 TRAIN_SET_IMAGES_DIR = 'datasets/HUMANS/train/jpge'
 TRAIN_SET_LABELS_DIR = 'datasets/HUMANS/train/segmented'
 VALIDATION_SET_IMAGES_DIR = 'datasets/HUMANS/validation/jpge'
@@ -88,14 +88,14 @@ def main():
 
     model.summary()
     model.compile(loss='binary_crossentropy',
-                  optimizer=optimizers.Adam(lr=1e-4), metrics=['acc'])
+                  optimizer=optimizers.SGD(lr=0.001, momentum=0.9, decay=0.0005, nesterov=False), metrics=['acc'])
 
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
-                                  patience=2, verbose=1, min_lr=1e-6)
+                                  patience=3, verbose=1, min_lr=1e-4)
 
     early_stop = EarlyStopping(monitor='val_loss',
                                min_delta=0,
-                               patience=10,
+                               patience=15,
                                verbose=0, mode='auto')
 
     callbacks_list = [reduce_lr, early_stop]
@@ -103,7 +103,7 @@ def main():
     train_generator = data_gen(TRAIN_SET_IMAGES_DIR, TRAIN_SET_LABELS_DIR)
     validation_generator = data_gen(VALIDATION_SET_IMAGES_DIR, VALIDATION_SET_LABELS_DIR)
 
-    history = model.fit_generator(train_generator, steps_per_epoch=1500, epochs=10,
+    history = model.fit_generator(train_generator, steps_per_epoch=1500, epochs=50,
                                   validation_data=validation_generator, validation_steps=800,
                                   callbacks=callbacks_list)
 
