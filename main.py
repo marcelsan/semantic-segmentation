@@ -67,11 +67,11 @@ def data_gen(images_dir, labels_dir, batch_size=16, image_size=(480, 480)):
 
         for _ in range(batch_size):
             image = cv2.imread(images[i]) * 1./255
-            label = cv2.imread(labels[i], 0)
-            label.astype(np.uint8)
+            image = cv2.resize(image, image_size)
+
+            label = cv2.imread(labels[i], 0) * 1.0
             label = cv2.resize(label, image_size)
             label = np.expand_dims(label, axis=2)
-            image = cv2.resize(image, image_size)
 
             top_batch.append(image)
             batch_labels.append(label)
