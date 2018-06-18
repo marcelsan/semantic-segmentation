@@ -25,7 +25,8 @@ def main():
     loaded_model.load_weights("weights/model.h5")
     print("[INFO] Loaded model from disk")
 
-    test_image = cv2.imread('datasets/HUMANS/train/jpge/2007_000346.jpg') * 1./255
+    test_image = cv2.imread(
+        'datasets/test_images/2.png') * 1./255
     
     shape_ = (test_image.shape[0], test_image.shape[1])
     test_image = cv2.resize(test_image, (480, 480))
@@ -34,22 +35,21 @@ def main():
     label = loaded_model.predict(batch, 1)[0]
 
 
-    image_pred = K.variable(label)
-    true_image = cv2.imread('datasets/HUMANS/train/segmented/2007_000346.png', 0) * 1.
-    true_image = cv2.resize(true_image, (480, 480))
-    true_image2 = true_image * 255
-    true_image = np.expand_dims(true_image, axis=2)
-    true_image = K.variable(true_image)
+    # image_pred = K.variable(label)
+    # true_image = cv2.imread(
+    #     'datasets/HUMANS/train/segmented/2007_001430.png', 0) * 1.
+    # true_image = cv2.resize(true_image, (480, 480))
+    # true_image2 = true_image * 255
+    # true_image = np.expand_dims(true_image, axis=2)
+    # true_image = K.variable(true_image)
 
-    loss = binary_crossentropy(true_image, image_pred)
+    #loss = binary_crossentropy(true_image, image_pred)
     print("[INFO] Segmentation predicted")
-    a = K.eval(loss)
+    #a = K.eval(loss)
     #print(a)
 
-
-    label = label * 255
     label = cv2.resize(label, shape_) * 255
-    #_, label = cv2.threshold(label, 25, 255, cv2.THRESH_BINARY)
+    _, label = cv2.threshold(label, 128, 255, cv2.THRESH_BINARY)
     #plt.imshow(label, cmap='gray')
     #plt.imshow(true_image2, cmap='gray')
     #plt.show()

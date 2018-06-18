@@ -32,14 +32,17 @@ def create_model(input_w=480, input_h=480):
         else:
             layer.trainable = False
 
-    x = layers.Conv2D(4096, kernel_size=(3, 3), use_bias=False, activation='relu',
+    x = layers.Conv2D(1024, kernel_size=(5, 5), use_bias=False, activation='relu',
                     padding='same', kernel_initializer=initializers.glorot_uniform(42))(vgg.output)
     x = layers.Dropout(0.5)(x)
-    x = layers.Conv2D(4096, kernel_size=(1, 1), use_bias=False, activation='relu',
+    x = layers.Conv2D(512, kernel_size=(3, 3), use_bias=False, activation='relu',
                     padding='same', kernel_initializer=initializers.glorot_uniform(42))(x)
     x = layers.Dropout(0.5)(x)
-    x = layers.Conv2D(1, kernel_size=(1, 1), use_bias=False, activation='relu',
+    x = layers.Conv2D(256, kernel_size=(3, 3), use_bias=False, activation='relu',
                     padding='same', kernel_initializer=initializers.glorot_uniform(42))(x)
+    x = layers.Dropout(0.5)(x)
+    x = layers.Conv2D(128, kernel_size=(3, 3), use_bias=False, activation='relu',
+                      padding='same', kernel_initializer=initializers.glorot_uniform(42))(x)
     x = layers.Conv2DTranspose(1, kernel_size=(64, 64), strides=(
         32, 32), use_bias=False, activation='sigmoid', padding='same', kernel_initializer=initializers.glorot_uniform(42))(x)
 
@@ -103,7 +106,7 @@ def main():
     train_generator = data_gen(TRAIN_SET_IMAGES_DIR, TRAIN_SET_LABELS_DIR)
     validation_generator = data_gen(VALIDATION_SET_IMAGES_DIR, VALIDATION_SET_LABELS_DIR)
 
-    history = model.fit_generator(train_generator, steps_per_epoch=500, epochs=15,
+    history = model.fit_generator(train_generator, steps_per_epoch=500, epochs=10,
                                   validation_data=validation_generator, validation_steps=190,
                                   callbacks=callbacks_list)
 
