@@ -26,7 +26,7 @@ def main():
     print("[INFO] Loaded model from disk")
 
     test_image = cv2.imread(
-        'datasets/test_images/2.png') * 1./255
+        'datasets/HUMANS/train/jpge/2007_000170.jpg') * 1./255
     
     shape_ = (test_image.shape[0], test_image.shape[1])
     test_image = cv2.resize(test_image, (480, 480))
@@ -49,7 +49,7 @@ def main():
     #print(a)
 
     label = cv2.resize(label, shape_) * 255
-    _, label = cv2.threshold(label, 128, 255, cv2.THRESH_BINARY)
+    #_, label = cv2.threshold(label, 128, 255, cv2.THRESH_BINARY)
     #plt.imshow(label, cmap='gray')
     #plt.imshow(true_image2, cmap='gray')
     #plt.show()
