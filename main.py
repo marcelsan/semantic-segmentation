@@ -44,12 +44,7 @@ def create_model(input_w=480, input_h=480):
     x = layers.Conv2D(128, kernel_size=(3, 3), use_bias=False, activation='relu',
                       padding='same', kernel_initializer=initializers.glorot_uniform(42))(x)
     x = layers.Conv2DTranspose(1, kernel_size=(64, 64), strides=(
-        32, 32), use_bias=False, activation='relu', padding='same', kernel_initializer=initializers.glorot_uniform(42))(x)
-
-    x = layers.Reshape((input_h * input_w, 1),
-                       input_shape=(input_h, input_w, 1))(x)
-
-    x = layers.Activation('sigmoid')(x)
+        32, 32), use_bias=False, activation='sigmoid', padding='same', kernel_initializer=initializers.glorot_uniform(42))(x)
 
     model = models.Model(input_, x)
 
@@ -75,12 +70,12 @@ def data_gen(images_dir, labels_dir, batch_size=16, image_size=(480, 480)):
 
         for _ in range(batch_size):
             image = cv2.imread(images[i]) * 1./255
-            image = cv2.resize(image, image_size)
+            image = cv2.resize(image, image_size, cv2.INTER_NEAREST)
 
             label = cv2.imread(labels[i], 0) * 1.0
-            label = cv2.resize(label, image_size)
-            #label = np.expand_dims(label, axis=2)
-            label = label.reshape(image_size[0] * image_size[1], 1)
+            label = cv2.resize(label, image_size, cv2.INTER_NEAREST)
+            label = np.expand_dims(label, axis=2)
+            #label = label.reshape(image_size[0] * image_size[1], 1)
 
             top_batch.append(image)
             batch_labels.append(label)
@@ -97,14 +92,14 @@ def main():
 
     model.summary()
     model.compile(loss='binary_crossentropy',
-                  optimizer=optimizers.SGD(lr=0.1), metrics=['acc'])
+                  optimizer=optimizers.SGD(lr=0.01), metrics=['acc'])
 
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
                                   patience=3, verbose=1, min_lr=1e-4)
 
     early_stop = EarlyStopping(monitor='val_loss',
                                min_delta=0,
-                               patience=10,
+                               patience=7,
                                verbose=0, mode='auto')
 
     callbacks_list = [reduce_lr, early_stop]
