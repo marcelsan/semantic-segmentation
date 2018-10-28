@@ -45,14 +45,17 @@ def data_gen(images_dir, labels_dir, batch_size=16, image_size=(480, 480)):
         yield np.array(top_batch), np.array(batch_labels)
 
 def main():
+    # Create the model.
     model = SegNet(input_shape=(480,480))
     model.summary()
 
     model.compile(loss='categorical_crossentropy', optimizer=optimizers.SGD(lr=0.1), metrics=['acc'])
 
+    # Read the dataset.
     train_generator = data_gen(FLAGS.trainImageDir, FLAGS.trainLabelsDir)
     validation_generator = data_gen(FLAGS.valImagesDir, FLAGS.valLabelsDir)
 
+    # Train the model.
     history = model.fit_generator(train_generator, steps_per_epoch=1000, epochs=50,
                                   validation_data=validation_generator, validation_steps=500)
 
