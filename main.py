@@ -4,11 +4,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
+from PIL import Image
+
 from keras import optimizers
+from keras.utils import np_utils
 from models.SegNet import SegNet
 from initialize import FLAGS
 
-def data_gen(images_dir, labels_dir, batch_size=16, image_size=(480, 480)):
+def data_gen(images_dir, labels_dir, nb_classes, batch_size=16, image_size=(480, 480)):
     """
     Generator to yield batches of two inputs (per sample) with shapes top_dim and 
     bot_dim along with their labels.
@@ -18,7 +21,6 @@ def data_gen(images_dir, labels_dir, batch_size=16, image_size=(480, 480)):
     assert(len(images) == len(labels))
 
     data_size = len(images)
-
     i = 0
 
     while True:
@@ -26,13 +28,16 @@ def data_gen(images_dir, labels_dir, batch_size=16, image_size=(480, 480)):
         batch_labels = []
 
         for _ in range(batch_size):
+            # Input
             image = cv2.imread(images[i]) * 1./255
             image = cv2.resize(image, image_size, cv2.INTER_NEAREST)
 
-            label = cv2.imread(labels[i]) * 1.0
-            label = cv2.resize(label, image_size, cv2.INTER_NEAREST)
-            label = np.expand_dims(label, axis=2)
-            label = label.reshape(image_size[0] * image_size[1], 3)
+            # Label
+            Y = np.array(Image.open(labels[i]))
+            Y[Y == 255] = 0
+            Y = np_utils.to_categorical(Y, nb_classes)
+            Y = cv2.resize(Y, image_size)
+            label = Y.reshape(image_size[0] * image_size[1], nb_classes)
 
             top_batch.append(image)
             batch_labels.append(label)
@@ -46,14 +51,14 @@ def data_gen(images_dir, labels_dir, batch_size=16, image_size=(480, 480)):
 
 def main():
     # Create the model.
-    model = SegNet(input_shape=(480,480))
+    model = SegNet(input_shape=(480,480), classes=FLAGS.numClasses)
     model.summary()
 
     model.compile(loss='categorical_crossentropy', optimizer=optimizers.SGD(lr=0.1), metrics=['acc'])
 
     # Read the dataset.
-    train_generator = data_gen(FLAGS.trainImageDir, FLAGS.trainLabelsDir)
-    validation_generator = data_gen(FLAGS.valImagesDir, FLAGS.valLabelsDir)
+    train_generator = data_gen(FLAGS.trainImageDir, FLAGS.trainLabelsDir, FLAGS.numClasses)
+    validation_generator = data_gen(FLAGS.valImagesDir, FLAGS.valLabelsDir, FLAGS.numClasses)
 
     # Train the model.
     history = model.fit_generator(train_generator, steps_per_epoch=1000, epochs=50,

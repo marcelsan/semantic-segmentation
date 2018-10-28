@@ -10,6 +10,9 @@ FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_boolean ('saveModel', 1, 
                             'Indicate whether the network is training or testing.')
 
+tf.app.flags.DEFINE_integer ('numClasses', 21,
+							'Indicate the number of classes on the dataset.')
+
 tf.app.flags.DEFINE_string  ('trainImageDir', 'dataset/train/input/',
                             'Directory for the train set input.')
 
