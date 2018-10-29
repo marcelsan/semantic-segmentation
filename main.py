@@ -11,7 +11,7 @@ from keras.utils import np_utils
 from models.SegNet import SegNet
 from initialize import FLAGS
 
-def data_gen(images_dir, labels_dir, nb_classes, batch_size=16, image_size=(480, 480)):
+def data_gen(images_dir, labels_dir, nb_classes, batch_size=16, image_size=(320, 320)):
     """
     Generator to yield batches of two inputs (per sample) with shapes top_dim and 
     bot_dim along with their labels.
@@ -37,7 +37,7 @@ def data_gen(images_dir, labels_dir, nb_classes, batch_size=16, image_size=(480,
             Y[Y == 255] = 0
             Y = np_utils.to_categorical(Y, nb_classes)
             Y = cv2.resize(Y, image_size)
-            label = Y.reshape(image_size[0] * image_size[1], nb_classes)
+            label = Y.reshape(image_size[0] * image_size[1], nb_classes).astype(np.int8)
 
             top_batch.append(image)
             batch_labels.append(label)
@@ -51,17 +51,15 @@ def data_gen(images_dir, labels_dir, nb_classes, batch_size=16, image_size=(480,
 
 def main():
     # Create the model.
-    model = SegNet(input_shape=(480,480), classes=FLAGS.numClasses)
-    model.summary()
-
-    model.compile(loss='categorical_crossentropy', optimizer=optimizers.SGD(lr=0.1), metrics=['acc'])
+    model = SegNet(input_shape=(320,320), classes=FLAGS.numClasses)
+    model.compile(loss='categorical_crossentropy', optimizer=optimizers.SGD(lr=0.001), metrics=['acc'])
 
     # Read the dataset.
     train_generator = data_gen(FLAGS.trainImageDir, FLAGS.trainLabelsDir, FLAGS.numClasses)
     validation_generator = data_gen(FLAGS.valImagesDir, FLAGS.valLabelsDir, FLAGS.numClasses)
 
     # Train the model.
-    history = model.fit_generator(train_generator, steps_per_epoch=1000, epochs=50,
+    history = model.fit_generator(train_generator, steps_per_epoch=1000, epochs=30,
                                   validation_data=validation_generator, validation_steps=500)
 
     if FLAGS.saveModel:
