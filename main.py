@@ -56,7 +56,7 @@ def main():
     # Create the model.
     model = SegNet(input_shape=(320,320), classes=FLAGS.numClasses)
     model.summary()
-    # model.compile(loss='categorical_crossentropy', optimizer=optimizers.SGD(lr=0.001, momentum=0.9), metrics=['acc'])
+    model.compile(loss='categorical_crossentropy', optimizer=optimizers.SGD(lr=0.001, momentum=0.9), metrics=['acc'])
 
     # Read the dataset.
     train_generator = data_gen(FLAGS.trainImageDir, FLAGS.trainLabelsDir, FLAGS.numClasses)
