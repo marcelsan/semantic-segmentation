@@ -68,12 +68,15 @@ def main():
     reduce_lr = callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, 
                                             patience=4, min_lr=0.00003, verbose=1)
 
+    checkpoint = callbacks.ModelCheckpoint('weights/weights.{epoch:02d}-{val_loss:.2f}.hdf5', 
+                                            monitor='val_loss', verbose=1, period=5)
+
     # Train the model.
     print('[INFO] Started training.')
     start_time = time.time()
-    history = model.fit_generator(train_generator, steps_per_epoch=1000, epochs=30,
+    history = model.fit_generator(train_generator, steps_per_epoch=1000, epochs=15,
                                   validation_data=validation_generator, validation_steps=500,
-                                  callbacks=[csv_logger, reduce_lr])
+                                  callbacks=[csv_logger, reduce_lr, checkpoint])
 
     print('[INFO] Train took: %s' % (time.time() - start_time))
 
