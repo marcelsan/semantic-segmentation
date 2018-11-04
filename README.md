@@ -21,6 +21,6 @@ Also, it employs additive skip connections from the encoder to the decoder.
 
 - [Encoder-Decoder based on SegNet](https://arxiv.org/abs/1511.00561)
 
-![alt](results/input/2007_000033.jpg "Input")![alt](results/2007_000033.png "Result") ![alt](results/gt/2007_000033.png "Groud Truth")
+![alt](results/input/2007_000033.jpg "Input" | width=320)![alt](results/2007_000033.png "Result") ![alt](results/gt/2007_000033.png "Groud Truth")
 
 - [Encoder-Decoder with skip connections based on SegNet](https://arxiv.org/abs/1511.00561).
