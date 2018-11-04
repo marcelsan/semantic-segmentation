@@ -21,16 +21,22 @@ Also, it employs additive skip connections from the encoder to the decoder.
 
 - [Encoder-Decoder based on SegNet](https://arxiv.org/abs/1511.00561)
 
+<p float="left">
 <img height="175" width='175' src="results/input/2007_000033.jpg">
 <img height='175' src="results/2007_000033.png">
 <img height="175" width='175' src="results/gt/2007_000033.png">
+<p>
 
+<p float="left">
 <img height="175" width='175' src="results/input/2007_000039.jpg">
 <img height='175' src="results/2007_000039.png">
 <img height="175" width='175' src="results/gt/2007_000039.png">
+<p>
 
+<p float="left">
 <img height="175" width='175' src="results/input/2007_000042.jpg">
 <img height='175' src="results/2007_000042.png">
 <img height="175" width='175' src="results/gt/2007_000042.png">
+</p>
 
 - [Encoder-Decoder with skip connections based on SegNet](https://arxiv.org/abs/1511.00561).
