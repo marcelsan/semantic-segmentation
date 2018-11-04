@@ -47,7 +47,6 @@ def data_gen(images_dir, labels_dir, nb_classes=21, batch_size=8, image_size=(32
             i += 1
 
             if i >= data_size:
-                # Shuffle??
                 i = 0
 
         yield np.array(top_batch), np.array(batch_labels)
