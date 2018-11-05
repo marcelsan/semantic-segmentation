@@ -10,7 +10,7 @@ from PIL import Image
 
 from keras import optimizers, callbacks
 from keras.utils import np_utils
-from models.SegNet import SegNet
+from models.SegNet import SegNet, SegNetSkip
 from initialize import FLAGS
 
 def data_gen(images_dir, labels_dir, nb_classes=21, batch_size=8, image_size=(320, 320)):
@@ -53,41 +53,42 @@ def data_gen(images_dir, labels_dir, nb_classes=21, batch_size=8, image_size=(32
 
 def main():
     # Create the model.
-    model = SegNet(input_shape=(320,320), classes=FLAGS.numClasses)
+    model = SegNetSkip(input_shape=(320,320), classes=FLAGS.numClasses)
     model.summary()
     model.compile(loss='categorical_crossentropy', optimizer=optimizers.SGD(lr=0.001, momentum=0.9), metrics=['acc'])
+
+    if FLAGS.saveModel:
+        # serialize model to JSON
+        model_json = model.to_json()
+        with open("weights/%s_model.json" % (FLAGS.experimentName), "w") as json_file:
+            json_file.write(model_json)
 
     # Read the dataset.
     train_generator = data_gen(FLAGS.trainImageDir, FLAGS.trainLabelsDir, FLAGS.numClasses)
     validation_generator = data_gen(FLAGS.valImagesDir, FLAGS.valLabelsDir, FLAGS.numClasses)
 
     # Create the CSV Logger callback
-    csv_logger = callbacks.CSVLogger('logs/training_%s.log' % (datetime.datetime.now()))
+    csv_logger = callbacks.CSVLogger('logs/%s_training_%s.log' % (FLAGS.experimentName, datetime.datetime.now()))
 
     reduce_lr = callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, 
                                             patience=4, min_lr=0.00003, verbose=1)
 
-    checkpoint = callbacks.ModelCheckpoint('weights/weights.{epoch:02d}-{val_loss:.2f}.hdf5', 
+    checkpoint = callbacks.ModelCheckpoint('weights/%s_weights.{epoch:02d}-{val_loss:.2f}.hdf5' % (FLAGS.experimentName), 
                                             monitor='val_loss', verbose=1, period=5)
 
     # Train the model.
-    print('[INFO] Started training.')
+    print('Started training.')
     start_time = time.time()
     history = model.fit_generator(train_generator, steps_per_epoch=1000, epochs=15,
                                   validation_data=validation_generator, validation_steps=500,
                                   callbacks=[csv_logger, reduce_lr, checkpoint])
 
-    print('[INFO] Train took: %s' % (time.time() - start_time))
+    print('Train took: %s' % (time.time() - start_time))
 
-    if FLAGS.saveModel:
-        # serialize model to JSON
-        model_json = model.to_json()
-        with open("weights/model.json", "w") as json_file:
-            json_file.write(model_json)
-
+    if FLAGS.saveFinalWeights:
         # serialize weights to HDF5
-        model.save_weights("weights/model.h5")
-        print("[INFO] Saved model to disk.")
+        model.save_weights("weights/%s_model.h5" % (FLAGS.experimentName))
+        print("Saved model to disk.")
 
     # acc = history.history['acc']
     # val_acc = history.history['val_acc']
