@@ -55,7 +55,7 @@ def main():
     # Create the model.
     model = SegNetSkip(input_shape=(320,320), classes=FLAGS.numClasses)
     model.summary()
-    model.compile(loss='categorical_crossentropy', optimizer=optimizers.SGD(lr=0.001, momentum=0.9), metrics=['acc'])
+    model.compile(loss='categorical_crossentropy', optimizer=optimizers.Adam(lr=0.01), metrics=['acc'])
 
     if FLAGS.saveModel:
         # serialize model to JSON
@@ -79,7 +79,7 @@ def main():
     # Train the model.
     print('Started training.')
     start_time = time.time()
-    history = model.fit_generator(train_generator, steps_per_epoch=1000, epochs=15,
+    history = model.fit_generator(train_generator, steps_per_epoch=1000, epochs=18,
                                   validation_data=validation_generator, validation_steps=500,
                                   callbacks=[csv_logger, reduce_lr, checkpoint])
 
