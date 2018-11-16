@@ -7,7 +7,7 @@ import tensorflow as tf
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.app.flags.DEFINE_string  ('experimentName', 'seg_net_skip',
+tf.app.flags.DEFINE_string  ('experimentName', 'seg_net_skip_concatenate_adam_lr_01',
                             'Name of the experiment.')
 
 tf.app.flags.DEFINE_boolean ('saveModel', 1, 
