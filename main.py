@@ -79,8 +79,8 @@ def main():
     # Train the model.
     print('Started training.')
     start_time = time.time()
-    history = model.fit_generator(train_generator, steps_per_epoch=1000, epochs=18,
-                                  validation_data=validation_generator, validation_steps=500,
+    history = model.fit_generator(train_generator, steps_per_epoch=400, epochs=60,
+                                  validation_data=validation_generator, validation_steps=150,
                                   callbacks=[csv_logger, reduce_lr, checkpoint])
 
     print('Train took: %s' % (time.time() - start_time))
@@ -89,22 +89,6 @@ def main():
         # serialize weights to HDF5
         model.save_weights("weights/%s_model.h5" % (FLAGS.experimentName))
         print("Saved model to disk.")
-
-    # acc = history.history['acc']
-    # val_acc = history.history['val_acc']
-    # loss = history.history['loss']
-    # val_loss = history.history['val_loss']
-    # epochs = range(1, len(acc) + 1)
-    # plt.plot(epochs, acc, 'bo', label='Training acc')
-    # plt.plot(epochs, val_acc, 'b', label='Validation acc')
-    # plt.title('Training and validation accuracy')
-    # plt.legend()
-    # plt.figure()
-    # plt.plot(epochs, loss, 'bo', label='Training loss')
-    # plt.plot(epochs, val_loss, 'b', label='Validation loss')
-    # plt.title('Training and validation loss')
-    # plt.legend()
-    # plt.show()
 
 if __name__ == '__main__':
     main()
