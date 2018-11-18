@@ -14,7 +14,7 @@ def SegNet(input_shape, classes=3):
 
     set_trainable = False
     for layer in vgg.layers:
-        if layer.name == 'block5_pool':
+        if layer.name == 'block4_pool':
             set_trainable = True
         if set_trainable:
             layer.trainable = True

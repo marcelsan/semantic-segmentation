@@ -39,4 +39,46 @@ Also, it employs additive skip connections from the encoder to the decoder.
 <img height="275" width='275' src="results/gt/2007_000042.png">
 </p>
 
+<p float="left">
+<img height="275" width='275' src="results/input/2007_000663.jpg">
+<img height='275' src="results/2007_000663.png">
+<img height="275" width='275' src="results/gt/2007_000663.png">
+</p>
+
+<p float="left">
+<img height="275" width='275' src="results/input/2007_000762.jpg">
+<img height='275' src="results/2007_000762.png">
+<img height="275" width='275' src="results/gt/2007_000762.png">
+</p>
+
+<p float="left">
+<img height="275" width='275' src="results/input/2007_000799.jpg">
+<img height='275' src="results/2007_000799.png">
+<img height="275" width='275' src="results/gt/2007_000799.png">
+</p>
+
+<p float="left">
+<img height="275" width='275' src="results/input/2007_004712.jpg">
+<img height='275' src="results/2007_004712.png">
+<img height="275" width='275' src="results/gt/2007_004712.png">
+</p>
+
+<p float="left">
+<img height="275" width='275' src="results/input/2007_005331.jpg">
+<img height='275' src="results/2007_005331.png">
+<img height="275" width='275' src="results/gt/2007_005331.png">
+</p>
+
+<p float="left">
+<img height="275" width='275' src="results/input/2007_005626.jpg">
+<img height='275' src="results/2007_005626.png">
+<img height="275" width='275' src="results/gt/2007_005626.png">
+</p>
+
+<p float="left">
+<img height="275" width='275' src="results/input/2007_009251.jpg">
+<img height='275' src="results/2007_009251.png">
+<img height="275" width='275' src="results/gt/2007_009251.png">
+</p>
+
 - [Encoder-Decoder with skip connections based on SegNet](https://arxiv.org/abs/1511.00561).
