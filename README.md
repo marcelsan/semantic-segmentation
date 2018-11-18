@@ -21,6 +21,8 @@ Also, it employs additive skip connections from the encoder to the decoder.
 
 - [Encoder-Decoder based on SegNet](https://arxiv.org/abs/1511.00561)
 
+- [Encoder-Decoder with skip connections based on SegNet](https://arxiv.org/abs/1511.00561)
+
 <p float="left">
 <img height="275" width='275' src="results/input/2007_000033.jpg">
 <img height='275' src="results/2007_000033.png">
@@ -80,5 +82,3 @@ Also, it employs additive skip connections from the encoder to the decoder.
 <img height='275' src="results/2007_009251.png">
 <img height="275" width='275' src="results/gt/2007_009251.png">
 </p>
-
-- [Encoder-Decoder with skip connections based on SegNet](https://arxiv.org/abs/1511.00561).
